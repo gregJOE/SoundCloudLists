@@ -1,20 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
+using System.Net;
+using System.Web.Http;
 using System.Web.Mvc;
 
 namespace SoundCloudLists.Controllers
 {
     public class UserController : Controller
     {
-        public string Detail()
+        // GET: api/User
+        public ActionResult Index()
         {
-            return "detaillll";
+            return View();
         }
-        public string Delete()
-        {
 
+        // GET: api/User/5
+        public ActionResult Detail(int? userID)
+        {
+            return View();
+        }
+
+        // POST: api/User
+        public void Post([FromBody]string value)
+        {
+        }
+
+        // PUT: api/User/5
+        public void Put(int id, [FromBody]string value)
+        {
+        }
+
+        // DELETE: api/User/5
+        public void Delete(int id)
+        {
         }
     }
 }
