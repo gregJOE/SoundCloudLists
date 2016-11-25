@@ -4,21 +4,38 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Mvc;
+using SoundCloudLists.Models;
+using SoundCloudLists.Data;
 
 namespace SoundCloudLists.Controllers
 {
     public class UserController : Controller
     {
-        // GET: api/User
+        private UserRepository _userRepository = null;
+
+        public UserController()
+        {
+            _userRepository = new UserRepository();
+        }
+
         public ActionResult Index()
         {
             return View();
         }
 
         // GET: api/User/5
-        public ActionResult Detail(int? userID)
+        public ActionResult Detail(int? id)
         {
-            return View();
+            if (id == null)
+            {
+                //HttpError("404");
+                return new HttpNotFoundResult("User Not Found");
+            }
+
+            //TODO have a user repo object create a new user object
+            User currentUser = _userRepository.getUser((int)id.Value);
+
+            return View(currentUser);
         }
 
         // POST: api/User
@@ -34,6 +51,11 @@ namespace SoundCloudLists.Controllers
         // DELETE: api/User/5
         public void Delete(int id)
         {
+        }
+            
+        public void GetFollowers(int userID)
+        {
+
         }
     }
 }

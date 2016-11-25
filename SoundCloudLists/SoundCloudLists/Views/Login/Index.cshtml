@@ -1,0 +1,16 @@
+﻿@model SoundCloudLists.ViewModels.LoginViewModel
+
+@using (Html.BeginForm("SignIn", "Login", FormMethod.Post))
+{
+    <div class="login form-table-layout">
+        
+    </div>
+    
+    <div class="check">
+        <button id="loginButton">
+            Sign In
+        </button>
+    </div>
+
+    <input type="hidden" name="scdata" />
+}

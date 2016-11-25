@@ -1,0 +1,23 @@
+﻿@model SoundCloudLists.Models.User
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div id="generalUserSection">
+    <b>@Model.getUserName();</b>
+    <br />
+
+    <b>@Model.Followers()</b> Followers
+    <br />
+
+    Following <b>@Model.Following()</b>
+    
+    <input type="hidden" name="userID" value="@Model.getID()"/>
+</div>
+
+<div id="userFollowers">
+    <button id="followersButton">Followers</button>
+</div>

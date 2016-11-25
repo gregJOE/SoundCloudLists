@@ -1,0 +1,11 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<!-- show log in screen only if we havent verified log in-->
+
+@Html.Action("Index", "Login", new { returnUrl = @ViewBag.ReturnUrl })
+
