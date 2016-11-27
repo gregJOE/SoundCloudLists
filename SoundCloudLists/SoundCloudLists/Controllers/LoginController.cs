@@ -7,6 +7,10 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using SoundCloudLists.Data;
+using System.Web.Security;
+using System.Net;
+using System.IO;
+using SoundCloudLists.WebUtil;
 
 namespace SoundCloudLists.Controllers
 {
@@ -45,15 +49,23 @@ namespace SoundCloudLists.Controllers
         {
             try
             {
-                // soundcloud already athenticated user. Create new user object given user info and direct to
-                // user detail screen
+                var authToken = collection.Get("oauth");
+                if (authToken == null)
+                {
+                    return RedirectToAction("Index", "Login");
+                }
+                //if cookie doesnt exist
+                var encodedTokenArray = System.Text.Encoding.UTF8.GetBytes(authToken);
 
-                var jsonString = (collection.Get("scdata"));
+               // make get request to get current user information from SC
 
-                //Dictionary<String, object> mapJsonObjects = (Dictionary<String, object>)new JavaScriptSerializer().Deserialize(jsonString, Map<String, object>.class;
-                int userID = _userRepository.createUserFromJson(jsonString);
+               //TODO 'authToken' needs to be encrypted
+               CookieHandler.generateCookie(HttpContext.Response.Cookies, "SoundCloudToken", authToken);
+               
+                // make get request to get current user information from SC
+                /* this could all be in a class file. can make the api urls constants */
 
-                return RedirectToAction("Detail", "User", new { id = userID });
+                return RedirectToAction("Index", "User");
             }
             catch
             {

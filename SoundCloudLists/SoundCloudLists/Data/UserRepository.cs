@@ -17,13 +17,17 @@ namespace SoundCloudLists.Data
             return _loggedInUsers[id];
         }
 
-        public int createUserFromJson(string jsonString)
+        public User createUserFromJson(string jsonString)
         {
-            User newloggedinUser = JsonConvert.DeserializeObject<User>(jsonString);
+            User newUser = JsonConvert.DeserializeObject<User>(jsonString);
 
-            _loggedInUsers.Add(newloggedinUser.getID(), newloggedinUser);
+            return newUser;
+        }
+        public UserList createUsersFromJson(string jsonString)
+        {
+            var userList = JsonConvert.DeserializeObject<UserList>(jsonString);
 
-            return newloggedinUser.getID();
+            return userList;
         }
     }
 }

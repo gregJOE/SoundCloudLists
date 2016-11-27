@@ -6,6 +6,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using SoundCloudLists.Models;
 using SoundCloudLists.Data;
+using System.IO;
+using SoundCloudLists.WebUtil;
+using SoundCloudLists.API;
 
 namespace SoundCloudLists.Controllers
 {
@@ -18,24 +21,49 @@ namespace SoundCloudLists.Controllers
             _userRepository = new UserRepository();
         }
 
+        //TODO WRAP AROUND TRY/CATCH
         public ActionResult Index()
         {
-            return View();
+            //obtain cookie
+            var authToken = CookieHandler.retriveValueFromCookie(Request, "SoundCloudToken");
+            
+            /* wrap this function */
+            if (authToken == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            var responseFromServer = SoundCloudRestAPI.retriveMe(Request);
+
+            User user = _userRepository.createUserFromJson(responseFromServer);
+            return View(user);
         }
 
         // GET: api/User/5
+
+        //TODO WRAP AROUND TRY/CATCH
         public ActionResult Detail(int? id)
         {
-            if (id == null)
+            if (id   == null)
             {
                 //HttpError("404");
                 return new HttpNotFoundResult("User Not Found");
             }
 
-            //TODO have a user repo object create a new user object
-            User currentUser = _userRepository.getUser((int)id.Value);
+            /* wrap this function 
+            if (authToken == null)
+            {
+                return RedirectToAction("Index", "Login");
+            }
+            */
+            var responseFromServer = SoundCloudRestAPI.retriveUser((int)id);
+            
+            if (responseFromServer == null)
+            {
+                return new HttpNotFoundResult("User Not Found");
+            }
+            User user = _userRepository.createUserFromJson(responseFromServer);
 
-            return View(currentUser);
+            return View(user);
         }
 
         // POST: api/User
@@ -53,9 +81,34 @@ namespace SoundCloudLists.Controllers
         {
         }
             
-        public void GetFollowers(int userID)
+        public ActionResult Followers(int? id)
         {
+            if (id == null)
+            {
+                //HttpError("404");
+                return new HttpNotFoundResult("User Not Found");
+            }
 
+            var responseFromServer = SoundCloudRestAPI.retriveUserFollowers((int)id);
+            UserList users = _userRepository.createUsersFromJson(responseFromServer);
+
+            return PartialView(users);
+
+        }
+        public ActionResult Following(int? id)
+        {
+            if (id == null)
+            {
+                //HttpError("404");
+                return new HttpNotFoundResult("User Not Found");
+            }
+
+
+            // should this be a view model instead?
+            var responseFromServer = SoundCloudRestAPI.retriveUserFollowing((int)id);
+            UserList users = _userRepository.createUsersFromJson(responseFromServer);
+
+            return PartialView(users);
         }
     }
 }

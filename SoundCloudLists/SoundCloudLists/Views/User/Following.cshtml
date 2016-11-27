@@ -1,0 +1,18 @@
+﻿@model SoundCloudLists.Models.UserList
+
+@{
+    ViewBag.Title = "Following";
+}
+
+<h2>Followers</h2>
+
+@foreach (var following in Model.getContent())
+{
+    <div class="user">
+        <b>Username:</b> @following.getUserName()
+
+        <button name="AddToList">Add to List </button>
+    </div>
+}
+
+<button name="searchNext"> Next </button>
